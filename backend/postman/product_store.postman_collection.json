@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "3476ba34-7cbc-419f-aa7a-e858ff190c58",
+		"name": "product_store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29631600"
+	},
+	"item": [
+		{
+			"name": "create_product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":1,\"product_name\":\"Veal - Knuckle\",\"stock\":248,\"product_image\":\"http://dummyimage.com/102x136.png/ff4444/ffffff\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/v1/products/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search_products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/products/search?query=Sugar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "Sugar"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/products/6488",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						"6488"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list_products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/products/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product_name\": \"Milk 2% 500 Mlssss\",\n    \"stock\": 401,\n    \"product_image\": \"http://dummyimage.com/222x139.png/5fa2dd/ffffff\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/v1/products/6488",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						"6488"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
