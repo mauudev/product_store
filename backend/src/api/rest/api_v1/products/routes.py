@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, Path, Request
+from typing import Optional
 
-from apps.products.application.use_cases.use_cases import CreateProduct
+from fastapi import APIRouter, Depends
+
+from src.apps.products.application.use_cases import CreateProduct, SearchProducts
 from src.apps.products.domain.models import Product, ProductSchema
 
 from .schema import (
     CreateProductReq,
     CreateProductRes,
+    SearchProductsRes,
     UpdateProductReq,
     UpdateProductRes,
 )
@@ -19,3 +22,11 @@ async def create(
     use_case: CreateProduct = Depends(CreateProduct),
 ) -> ProductSchema:
     return await use_case.execute(data.product_name, data.stock, data.product_image)
+
+
+@router.get("/search")
+async def search(
+    use_case: SearchProducts = Depends(SearchProducts),
+    query: Optional[str] = None,
+):
+    return SearchProductsRes(products=[prd async for prd in use_case.execute(query)])

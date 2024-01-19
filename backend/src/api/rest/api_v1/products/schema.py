@@ -1,4 +1,8 @@
+from typing import List
+
 from pydantic import BaseModel, Field
+
+from src.apps.products.domain.models import ProductSchema
 
 
 class ProductBase(BaseModel):
@@ -22,5 +26,14 @@ class UpdateProductReq(ProductBase):
 class UpdateProductRes(ProductBase):
     pass
 
+
 class ReadAllProductsRes(BaseModel):
     products: list
+
+
+class SearchProductsRes(BaseModel):
+    products: List[ProductSchema]
+
+
+class SearchProductsRes(BaseModel):
+    products: List[ProductSchema]
