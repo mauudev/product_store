@@ -42,6 +42,20 @@ class Product(Entity):
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod
+    async def search_products(
+        cls, session: AsyncSession, product_name: str | None
+    ) -> AsyncIterator[Product]:
+        if not product_name:
+            stmt = select(cls)
+            stream = await session.stream_scalars(stmt.order_by(cls.id))
+        else:
+            stmt = select(cls).where(cls.product_name.contains(product_name))
+            stream = await session.stream_scalars(stmt.order_by(cls.id))
+
+        async for row in stream:
+            yield row
+
+    @classmethod
     async def create(
         cls, session: AsyncSession, product_name: str, stock: int, product_image: str
     ) -> Product:
