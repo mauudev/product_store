@@ -50,4 +50,7 @@ migrate-generate:
 migrate:
 	alembic upgrade head
 
+seed:
+	poetry run python src/modules/shared/seed.py
+
 .PHONY: install start clean test build

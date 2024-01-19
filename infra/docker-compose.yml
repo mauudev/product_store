@@ -1,18 +1,18 @@
 version: "3.9"
 
 services:
-  # ecommerce-app:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   container_name: ${ECOMMERCE_SERVICE_NAME}
-  #   hostname: ${ECOMMERCE_SERVICE_NAME}
-  #   restart: always
-  #   command: ./starter.sh --target flask
-  #   ports:
-  #     - 8000:8000
-  #   networks:
-  #     - ecommerce_network
+  backend:
+    build:
+      context: .
+      dockerfile: ../backend/Dockerfile
+    container_name: ps_backend
+    hostname: ps_backend
+    restart: always
+    command: ./starter.sh --target fastapi
+    ports:
+      - 8000:8000
+    networks:
+      - product_store
 
   postgres:
     container_name: pil_postgres
