@@ -27,13 +27,5 @@ class UpdateProductRes(ProductBase):
     pass
 
 
-class ReadAllProductsRes(BaseModel):
-    products: list
-
-
-class SearchProductsRes(BaseModel):
-    products: List[ProductSchema]
-
-
-class SearchProductsRes(BaseModel):
+class ReadProductsRes(BaseModel):
     products: List[ProductSchema]

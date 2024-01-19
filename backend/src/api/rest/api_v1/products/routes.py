@@ -2,13 +2,17 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from src.apps.products.application.use_cases import CreateProduct, SearchProducts
+from src.apps.products.application.use_cases import (
+    CreateProduct,
+    GetProduct,
+    SearchProducts,
+)
 from src.apps.products.domain.models import Product, ProductSchema
 
 from .schema import (
     CreateProductReq,
     CreateProductRes,
-    SearchProductsRes,
+    ReadProductsRes,
     UpdateProductReq,
     UpdateProductRes,
 )
@@ -29,4 +33,9 @@ async def search(
     use_case: SearchProducts = Depends(SearchProducts),
     query: Optional[str] = None,
 ):
-    return SearchProductsRes(products=[prd async for prd in use_case.execute(query)])
+    return ReadProductsRes(products=[prd async for prd in use_case.execute(query)])
+
+
+@router.get("/{product_id}")
+async def get_product(product_id: int, use_case: GetProduct = Depends(GetProduct)):
+    return await use_case.execute(product_id)
