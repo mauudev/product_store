@@ -27,5 +27,9 @@ class UpdateProductRes(ProductBase):
     pass
 
 
+class ReadProductRes(ProductBase):
+    id: int
+
+
 class ReadProductsRes(BaseModel):
     products: List[ProductSchema]
