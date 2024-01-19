@@ -11,6 +11,9 @@ class CreateProduct:
     async def execute(
         self, product_name: str, stock: int, product_image: str
     ) -> ProductSchema:
-        async with self.async_session as session:
-            product = await Product.create(session, product_name, stock, product_image)
-            return ProductSchema.model_validate(product)
+        try:
+            async with self.async_session as session:
+                product = await Product.create(session, product_name, stock, product_image)
+                return ProductSchema.model_validate(product)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal server error: {e}")

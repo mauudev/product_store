@@ -9,8 +9,11 @@ class GetProduct:
         self.async_session = session
 
     async def execute(self, product_id: int) -> ProductSchema:
-        async with self.async_session as session:
-            product = await Product.read_by_id(session, product_id)
-            if not product:
-                raise HTTPException(status_code=404, detail="Product not found")
-            return ProductSchema.model_validate(product)
+        try:
+            async with self.async_session as session:
+                product = await Product.read_by_id(session, product_id)
+                if not product:
+                    raise HTTPException(status_code=404, detail="Product not found")
+                return ProductSchema.model_validate(product)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
