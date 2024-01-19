@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  # ecommerce-app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   container_name: ${ECOMMERCE_SERVICE_NAME}
+  #   hostname: ${ECOMMERCE_SERVICE_NAME}
+  #   restart: always
+  #   command: ./starter.sh --target flask
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - ecommerce_network
+
+  postgres:
+    container_name: pil_postgres
+    hostname: pil_postgres
+    restart: always
+    image: postgres:15.3
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: product_store
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db_scripts/pg_many_db:/docker-entrypoint-initdb.d/initdb.sh
+    ports:
+      - 7001:5432
+    networks:
+      - product_store
+
+volumes:
+  postgres_data:
+
+networks:
+  product_store:
+    name: product_store
+    driver: bridge
