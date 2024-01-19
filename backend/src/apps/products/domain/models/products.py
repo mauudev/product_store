@@ -6,7 +6,6 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
-
 from src.modules.shared.database import Entity
 
 
@@ -74,6 +73,13 @@ class Product(Entity):
         self.product_name = product_name
         self.stock = stock
         self.product_image = product_image
+        await session.flush()
+        await session.commit()
+
+    async def update_partial(self, session: AsyncSession, fields: dict) -> None:
+        for key, value in fields.items():
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         await session.flush()
         await session.commit()
 

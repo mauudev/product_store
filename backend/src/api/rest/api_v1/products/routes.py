@@ -2,24 +2,17 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 from fastapi_pagination import Page, add_pagination, paginate
-
 from src.apps.products.application.use_cases import (
     CreateProduct,
     GetProduct,
     ListProducts,
     SearchProducts,
     UpdateProduct,
+    UpdateProductPartial,
 )
 from src.apps.products.domain.models import Product, ProductSchema
 
-from .schema import (
-    CreateProductReq,
-    CreateProductRes,
-    ReadProductRes,
-    ReadProductsRes,
-    UpdateProductReq,
-    UpdateProductRes,
-)
+from .schema import CreateProductReq, ReadProductsRes, UpdateProductReq
 
 router = APIRouter(prefix="/products")
 
@@ -39,12 +32,12 @@ async def create(
     return await use_case.execute(data.product_name, data.stock, data.product_image)
 
 
-@router.get("/search", response_model=ReadProductsRes)
+@router.get("/search", response_model=Page[ProductSchema])
 async def search(
     use_case: SearchProducts = Depends(SearchProducts),
     query: Optional[str] = None,
 ):
-    return ReadProductsRes(products=[prd async for prd in use_case.execute(query)])
+    return paginate([prd async for prd in use_case.execute(query)])
 
 
 @router.get("/{product_id}", response_model=ProductSchema)
@@ -59,7 +52,7 @@ async def read_all_paginated(use_case: ListProducts = Depends(ListProducts)):
 
 @router.put(
     "/{product_id}",
-    response_model=UpdateProductRes,
+    response_model=ProductSchema,
 )
 async def update(
     data: UpdateProductReq,
@@ -72,3 +65,15 @@ async def update(
         data.stock,
         data.product_image,
     )
+
+
+@router.patch(
+    "/{product_id}",
+    response_model=ProductSchema,
+)
+async def partial_update(
+    product_id: int,
+    fields: dict,
+    use_case: UpdateProductPartial = Depends(UpdateProductPartial),
+):
+    return await use_case.execute(product_id, fields)
