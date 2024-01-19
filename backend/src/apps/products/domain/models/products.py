@@ -75,6 +75,7 @@ class Product(Entity):
         self.stock = stock
         self.product_image = product_image
         await session.flush()
+        await session.commit()
 
     @classmethod
     async def delete(cls, session: AsyncSession, product: Product) -> None:
