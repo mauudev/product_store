@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 from src.apps.products.application.use_cases import (
     CreateProduct,
     GetProduct,
+    ListProducts,
     SearchProducts,
 )
 from src.apps.products.domain.models import Product, ProductSchema
@@ -40,3 +41,8 @@ async def search(
 @router.get("/{product_id}", response_model=ProductSchema)
 async def get_product(product_id: int, use_case: GetProduct = Depends(GetProduct)):
     return await use_case.execute(product_id)
+
+
+@router.get("/", response_model=ReadProductsRes)
+async def read_all(use_case: ListProducts = Depends(ListProducts)):
+    return ReadProductsRes(products=[prd async for prd in use_case.execute()])
