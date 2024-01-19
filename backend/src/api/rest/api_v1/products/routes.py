@@ -7,6 +7,7 @@ from src.apps.products.application.use_cases import (
     GetProduct,
     ListProducts,
     SearchProducts,
+    UpdateProduct,
 )
 from src.apps.products.domain.models import Product, ProductSchema
 
@@ -46,3 +47,20 @@ async def get_product(product_id: int, use_case: GetProduct = Depends(GetProduct
 @router.get("/", response_model=ReadProductsRes)
 async def read_all(use_case: ListProducts = Depends(ListProducts)):
     return ReadProductsRes(products=[prd async for prd in use_case.execute()])
+
+
+@router.put(
+    "/{product_id}",
+    response_model=UpdateProductRes,
+)
+async def update(
+    data: UpdateProductReq,
+    product_id: int,
+    use_case: UpdateProduct = Depends(UpdateProduct),
+):
+    return await use_case.execute(
+        product_id,
+        data.product_name,
+        data.stock,
+        data.product_image,
+    )

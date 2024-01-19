@@ -20,11 +20,11 @@ class CreateProductRes(ProductBase):
 
 
 class UpdateProductReq(ProductBase):
-    id: int
+    pass
 
 
 class UpdateProductRes(ProductBase):
-    pass
+    id: int
 
 
 class ReadProductRes(ProductBase):
