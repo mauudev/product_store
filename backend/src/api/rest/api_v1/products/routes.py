@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends
+from fastapi_pagination import Page, add_pagination, paginate
 
 from src.apps.products.application.use_cases import (
     CreateProduct,
@@ -21,6 +22,13 @@ from .schema import (
 )
 
 router = APIRouter(prefix="/products")
+
+import json
+
+
+def read_json(file_path: str = "src/modules/shared/data.json"):
+    with open(file_path, "r") as json_file:
+        return json.load(json_file)
 
 
 @router.post("/create", response_model=ProductSchema)
@@ -44,9 +52,9 @@ async def get_product(product_id: int, use_case: GetProduct = Depends(GetProduct
     return await use_case.execute(product_id)
 
 
-@router.get("/", response_model=ReadProductsRes)
-async def read_all(use_case: ListProducts = Depends(ListProducts)):
-    return ReadProductsRes(products=[prd async for prd in use_case.execute()])
+@router.get("/", response_model=Page[ProductSchema])
+async def read_all_paginated(use_case: ListProducts = Depends(ListProducts)):
+    return paginate([prd async for prd in use_case.execute()])
 
 
 @router.put(

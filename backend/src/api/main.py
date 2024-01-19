@@ -1,5 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi_pagination import add_pagination
+from fastapi_pagination.utils import disable_installed_extensions_check
 
 from src.api.rest.api_v1.route_builder import build_routes
 from src.modules.shared.logger import logger
@@ -8,6 +10,8 @@ from src.settings import APP_SETTINGS
 
 app = FastAPI()
 app = build_routes(app)
+add_pagination(app)
+disable_installed_extensions_check()
 
 
 @app.on_event("startup")
