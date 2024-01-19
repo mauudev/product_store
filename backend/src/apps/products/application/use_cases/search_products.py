@@ -1,7 +1,5 @@
 from typing import AsyncIterator
 
-from fastapi import HTTPException
-
 from src.apps.products.domain.models import Product, ProductSchema
 from src.modules.shared.database import AsyncSession
 

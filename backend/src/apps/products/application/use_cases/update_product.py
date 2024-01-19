@@ -14,7 +14,7 @@ class UpdateProduct:
         async with self.async_session as session:
             product = await Product.read_by_id(session, product_id)
             if not product:
-                raise HTTPException(status_code=404)
+                raise HTTPException(status_code=404, detail="Product not found")
             await product.update(session, product_name, stock, product_image)
             await session.refresh(product)
             return ProductSchema.model_validate(product)
