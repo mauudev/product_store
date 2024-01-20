@@ -6,12 +6,12 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 WORKDIR /src
 COPY . /src
-RUN echo "Contenido de /src:"
-RUN ls -la /src
 RUN apt update -y && apt upgrade -y && apt install curl -y
 RUN curl -sSL https://install.python-poetry.org | python -
 RUN poetry install --no-dev
-RUN chmod +x backend-starter.sh
+RUN chmod +x ./scripts/starter.sh
+RUN chmod +x ./scripts/wait-for-it.sh
+RUN chmod +x ./scripts/run-backend.sh
 
 EXPOSE 8000
 
