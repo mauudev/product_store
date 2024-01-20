@@ -8,6 +8,11 @@ while [ $# -gt 0 ] ; do
 done
 
 case $W in
-    fastapi) poetry run python src/api/main.py;;
-    migrate) poetry run alembic upgrade head;;
+    migrate)
+        echo "Waiting for database to be ready..."
+        timeout 30 bash -c 'until poetry run alembic -c alembic.ini upgrade head; do sleep 1; done'
+        echo "Migration completed"
+        ;;
+    fastapi) 
+        poetry run python src/api/main.py;;
 esac
