@@ -1,22 +1,34 @@
 version: "3.9"
 
 services:
-  # backend:
-  #   build:
-  #     context: .
-  #     dockerfile: ../backend/Dockerfile
-  #   container_name: ps_backend
-  #   hostname: ps_backend
-  #   restart: always
-  #   command: ./starter.sh --target fastapi
-  #   ports:
-  #     - 8000:8000
-  #   networks:
-  #     - product_store
+  ps_frontend:
+    container_name: ps_frontend
+    hostname: ps_frontend
+    restart: always
+    build:
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
+    ports:
+      - 8080:80
+    networks:
+      - product_store
+
+  ps_backend:
+    build:
+      context: ../backend
+      dockerfile: ../backend/Dockerfile
+    container_name: ps_backend
+    hostname: ps_backend
+    restart: always
+    command: ./backend-starter.sh --target fastapi
+    ports:
+      - 8000:8000
+    networks:
+      - product_store
 
   postgres:
-    container_name: pil_postgres
-    hostname: pil_postgres
+    container_name: ps_postgres
+    hostname: ps_postgres
     restart: always
     image: postgres:15.3
     environment:
