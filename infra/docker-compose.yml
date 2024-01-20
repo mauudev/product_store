@@ -20,7 +20,12 @@ services:
     container_name: ps_backend
     hostname: ps_backend
     restart: always
-    command: ./backend-starter.sh --target fastapi
+    entrypoint:
+    - /bin/bash
+    - -c
+    - |
+      ./backend-starter.sh --target migrate
+      ./backend-starter.sh --target fastapi
     ports:
       - 8000:8000
     networks:
