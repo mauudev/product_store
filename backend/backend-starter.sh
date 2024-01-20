@@ -8,5 +8,5 @@ while [ $# -gt 0 ] ; do
 done
 
 case $W in
-    fastapi) poetry run gunicorn -b 0.0.0.0:8000 src.main:app --reload;;
+    fastapi) poetry run python src/api/main.py;;
 esac
