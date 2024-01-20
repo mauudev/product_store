@@ -1,31 +1,27 @@
-# Product Store
+# Aplicacion de Tienda de Productos
 
-Consta de dos servicios, el frontend y backend.
-El manejador de dependencias del backend es `Poetry`, se debe instalar para manejar todas las dependencias.
+Este repositorio contiene una aplicacion que simula una tienda de productos.
+La aplicacion se divide en dos partes: el frontend y el backend.
+Ambos componentes se despliegan utilizando Docker Compose para una facil configuracion y despliegue.
 
-Para iniciar el API server del backend, dirigirse a la carpeta `backend` y ejecutar los siguientes comandos:
+## Estructura del Repositorio
 
-La aplicacion usa Postgres como motor de base de datos, por lo que es necesario levantar el contenedor de docker via `docker-compose`.
-Dirigirse a la carpeta `infra` y ejecutar:
-```bash
-docker compose up
-```
+- `frontend`: La interfaz de usuario de la tienda, desarrollada en ReactJS con Vite.
+- `backend`: El servidor de la API, construido con FastAPI en Python, que interactua con una base de datos PostgreSQL utilizando SQLAlchemy con la extensión asyncio.
+- `infra`: Archivos Docker Compose y scripts para la orquestación de contenedores.
 
-Una vez levantado el contenedor, necesitamos crear las tablas, para ello ejecutar dentro de la carpeta `backend`:
-```bash
-make migrate
-```
+## Requisitos Previos
 
-Ahora podemos iniciar el servidor:
+- Docker: Asegúrate de tener Docker instalado en tu máquina.
+- Docker Compose: Instala Docker Compose para facilitar el despliegue de los servicios.
 
-```bash
-make shell # crea un entorno virtual de python
-make install # instala todas las dependencias
-make run # inicia el server
-```
+## Configuracion y Despliegue
 
-Para iniciar el frontend, dirigirse a la carpeta `frontend` y ejecutar el siguiente comando:
+Clonar el repo.
+Dentro del directorio infra, ejecuta el siguiente comando para iniciar los contenedores:
 
 ```bash
-npm run dev
+docker compose up -d --build
 ```
+
+Una vez que los contenedores estén en ejecución, puedes acceder al frontend en http://localhost:8080 y al backend en http://localhost:8000/docs.
