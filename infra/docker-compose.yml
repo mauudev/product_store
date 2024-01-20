@@ -26,7 +26,7 @@ services:
     networks:
       - product_store
 
-  postgres:
+  ps_postgres:
     container_name: ps_postgres
     hostname: ps_postgres
     restart: always
