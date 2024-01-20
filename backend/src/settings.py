@@ -14,6 +14,7 @@ class AppSettings:
         """
         self.settings = None
         self.setup()
+        self.API_HOST = self.settings.get("app", "api_host")
         self.API_PORT = self.settings.get("app", "api_port")
 
         self.DATABASE_HOST = self.settings.get("database", "host")
@@ -27,8 +28,8 @@ class AppSettings:
 
     def setup(self):
         config_file_to_use = CONFIG_FILE_PATH_FOR_LOCAL
-        is_running_in_docker = os.getenv("WITH_DOCKER")
-        print(is_running_in_docker)
+        is_running_in_docker = os.getenv("DOCKER_ENV")
+        print(f"Running in docker: {is_running_in_docker}")
 
         if is_running_in_docker:
             print(f"Using docker config file {CONFIG_FILE_PATH_FOR_DOCKER}")
