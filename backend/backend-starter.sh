@@ -9,4 +9,5 @@ done
 
 case $W in
     fastapi) poetry run python src/api/main.py;;
+    migrate) poetry run alembic upgrade head;;
 esac
