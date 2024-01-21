@@ -1,11 +1,11 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { actionTypes, fetchProducts, updateStock } from "../actions/productActions";
+import { actionTypes } from "../actions/productActions";
 import { api } from "../shared/api";
 
-function* fetchProductsSaga(pagination) {
+function* fetchProducts(action) {
   try {
-    const { page, size } = pagination.payload;
-    const productList = yield call(api.getAllProducts, page, size);
+    const { page, size, name } = action.payload;
+    const productList = yield call(api.getAllProducts, page, size, name);
     yield put({
       type: actionTypes.SET_PRODUCTS,
       payload: { products: productList.items, size: productList.size, rawData: productList },
@@ -15,7 +15,7 @@ function* fetchProductsSaga(pagination) {
   }
 }
 
-function* buyProductSaga(action) {
+function* buyProduct(action) {
   try {
     const response = yield call(api.buyProduct, action.payload.productId);
     yield put(updateStock(action.payload.productId, response.data.newStock));
@@ -25,8 +25,8 @@ function* buyProductSaga(action) {
 }
 
 function* productSaga() {
-  yield takeEvery(actionTypes.FETCH_PRODUCTS, fetchProductsSaga);
-  yield takeEvery(actionTypes.BUY_PRODUCT, buyProductSaga);
+  yield takeEvery(actionTypes.FETCH_PRODUCTS, fetchProducts);
+  yield takeEvery(actionTypes.BUY_PRODUCT, buyProduct);
 }
 
 export default productSaga;
