@@ -6,7 +6,6 @@ from src.apps.products.application.use_cases import (
     CreateProduct,
     GetProduct,
     ListProducts,
-    SearchProducts,
     UpdateProduct,
     UpdateProductPartial,
 )
@@ -15,13 +14,6 @@ from src.apps.products.domain.models import Product, ProductSchema
 from .schema import CreateProductReq, ReadProductsRes, UpdateProductReq
 
 router = APIRouter(prefix="/products")
-
-import json
-
-
-def read_json(file_path: str = "src/modules/shared/data.json"):
-    with open(file_path, "r") as json_file:
-        return json.load(json_file)
 
 
 @router.post("/create", response_model=ProductSchema)
@@ -32,22 +24,17 @@ async def create(
     return await use_case.execute(data.product_name, data.stock, data.product_image)
 
 
-@router.get("/search", response_model=Page[ProductSchema])
-async def search(
-    use_case: SearchProducts = Depends(SearchProducts),
-    query: Optional[str] = None,
-):
-    return paginate([prd async for prd in use_case.execute(query)])
-
-
 @router.get("/{product_id}", response_model=ProductSchema)
 async def get_product(product_id: int, use_case: GetProduct = Depends(GetProduct)):
     return await use_case.execute(product_id)
 
 
 @router.get("/", response_model=Page[ProductSchema])
-async def read_all_paginated(use_case: ListProducts = Depends(ListProducts)):
-    return paginate([prd async for prd in use_case.execute()])
+async def all_products(
+    use_case: ListProducts = Depends(ListProducts),
+    name: Optional[str] = None,
+):
+    return paginate([prd async for prd in use_case.execute(name)])
 
 
 @router.put(
