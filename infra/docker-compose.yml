@@ -12,7 +12,6 @@ services:
       - 8080:80
     networks:
       - product_store
-
   ps_backend:
     build:
       context: ../backend
@@ -20,17 +19,19 @@ services:
     container_name: ps_backend
     hostname: ps_backend
     restart: always
-    entrypoint:
-    - /bin/bash
-    - -c
-    - |
-      ./backend-starter.sh --target migrate
-      ./backend-starter.sh --target fastapi
+    depends_on:
+      - ps_postgres
+    command:
+      - "./scripts/wait-for-it.sh"
+      - "ps_postgres:5432"
+      - "--"
+      - "bash"
+      - "-c"
+      - "./scripts/run-backend.sh"
     ports:
       - 8000:8000
     networks:
       - product_store
-
   ps_postgres:
     container_name: ps_postgres
     hostname: ps_postgres
