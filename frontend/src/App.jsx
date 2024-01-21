@@ -1,15 +1,14 @@
 import React from "react";
-import ProductList from "./components/ProductList";
-import { ProductProvider } from './context/ProductContext';
+import Main from "./components/Main";
+import Header from "./components/Header";
+import "./App.css";
 
 const App = () => {
   return (
-    <ProductProvider>
-    <div>
-      <h1>Tienda de Productos</h1>
-      <ProductList />
+    <div className="App">
+      <Header />
+      <Main />
     </div>
-    </ProductProvider>
   );
 };
 

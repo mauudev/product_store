@@ -13,17 +13,6 @@ const api = {
     }
   },
 
-  searchProducts: async (query) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/products/search`, { params: { query } });
-      console.log(`Response: ${JSON.stringify(response.data)}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error when searching products ", error);
-      throw error;
-    }
-  },
-
   getProduct: async (productId) => {
     try {
       const response = await axios.get(`${BASE_URL}/products/${productId}`);
@@ -34,9 +23,9 @@ const api = {
     }
   },
 
-  getAllProducts: async (page, size) => {
+  getAllProducts: async (page, size, name) => {
     try {
-      const response = await axios.get(`${BASE_URL}/products?page=${page}&size=${size}`);
+      const response = await axios.get(`${BASE_URL}/products`, { params: { page, size, name } });
       return response.data;
     } catch (error) {
       console.error("Error when getting products", error);

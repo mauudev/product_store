@@ -29,9 +29,14 @@ class Product(Entity):
     product_image: Mapped[str] = mapped_column("product_image", nullable=False)
 
     @classmethod
-    async def read_all(cls, session: AsyncSession) -> AsyncIterator[Product]:
+    async def read_all(
+        cls, session: AsyncSession, product_name: str | None
+    ) -> AsyncIterator[Product]:
         stmt = select(cls)
-        stream = await session.stream_scalars(stmt.order_by(cls.id))
+        if product_name:
+            stmt = stmt.where(cls.product_name.contains(product_name))
+        stmt = stmt.order_by(cls.id)
+        stream = await session.stream_scalars(stmt)
         async for row in stream:
             yield row
 
@@ -39,20 +44,6 @@ class Product(Entity):
     async def read_by_id(cls, session: AsyncSession, product_id: int) -> Product | None:
         stmt = select(cls).where(cls.id == product_id)
         return await session.scalar(stmt.order_by(cls.id))
-
-    @classmethod
-    async def search_products(
-        cls, session: AsyncSession, product_name: str | None
-    ) -> AsyncIterator[Product]:
-        if not product_name:
-            stmt = select(cls)
-            stream = await session.stream_scalars(stmt.order_by(cls.id))
-        else:
-            stmt = select(cls).where(cls.product_name.contains(product_name))
-            stream = await session.stream_scalars(stmt.order_by(cls.id))
-
-        async for row in stream:
-            yield row
 
     @classmethod
     async def create(
