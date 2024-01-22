@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import SearchInput from "./SearchInput";
+import ProductCard from "./ProductCard";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "../actions/productActions";
 import { v4 as uuidv4 } from "uuid";
@@ -34,7 +35,12 @@ const Main = () => {
   };
 
   const handleSearch = (search) => {
+    setPage(1);
     setSearchTerm(search);
+  };
+
+  const handlePurchase = (productId) => {
+    console.log("Comprando", productId);
   };
 
   const filterRenderProducts = (products, searchTerm) => {
@@ -42,11 +48,7 @@ const Main = () => {
       .filter((product) => (searchTerm ? product.product_name.includes(searchTerm) : true))
       .map((product) => (
         <Grid item xs={2} sm={4} md={4} key={uuidv4()}>
-          <Item>
-            <img src={product.product_image} alt={product.product_name} />
-            <h3>{product.product_name}</h3>
-            <p>Stock: {product.stock}</p>
-          </Item>
+          <ProductCard product={product} handlePurchase={handlePurchase} />
         </Grid>
       ));
   };
