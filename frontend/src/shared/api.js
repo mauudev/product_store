@@ -45,10 +45,19 @@ const api = {
 
   updateProductPartial: async (productId, data) => {
     try {
-      const response = await axios.patch(`${BASE_URL}/products/${productId}`, data);
-      return response.data;
+      await axios.patch(`${BASE_URL}/products/${productId}`, data);
     } catch (error) {
       console.error("Error when updating product ", error);
+      throw error;
+    }
+  },
+
+  buyProduct: async (data) => {
+    try {
+      const response = await axios.patch(`${BASE_URL}/products/${data.productId}/buy/${data.quantity}`, {"stock": data.quantity});
+      return response.data;
+    } catch (error) {
+      console.error("Error when buying product ", error);
       throw error;
     }
   },

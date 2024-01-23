@@ -2,6 +2,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { actionTypes } from "../actions/productActions";
 import { api } from "../shared/api";
 
+// Main -> dispatch(actions) -> sagas -> external calls -> put(actions) -> reducers -> redux store
 function* fetchProducts(action) {
   try {
     const { page, size, name } = action.payload;
@@ -17,10 +18,10 @@ function* fetchProducts(action) {
 
 function* buyProduct(action) {
   try {
-    const response = yield call(api.buyProduct, action.payload.productId);
-    yield put(updateStock(action.payload.productId, response.data.newStock));
+    const { productId, quantity } = action.payload;
+    yield call(api.buyProduct, { productId, quantity });
   } catch (error) {
-    console.error("Error al comprar el producto", error);
+    console.error("Error when buying product", error);
   }
 }
 
