@@ -134,6 +134,46 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "update_prod_partial",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "buy_product",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"stock\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/v1/products/196001/buy/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"products",
+						"196001",
+						"buy",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
