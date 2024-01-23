@@ -18,6 +18,7 @@ black = "^23.12.1"
 uvicorn = {extras = ["standard"], version = "^0.26.0"}
 pydantic = "^2.5.3"
 fastapi-pagination = "^0.12.14"
+python-socketio = "^5.11.0"
 
 
 
