@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { experimentalStyled as styled } from "@mui/material/styles";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import SearchInput from "./SearchInput";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts } from "../actions/productActions";
+import ProductCard from "./ProductCard";
+import { createWebSocketConnection } from "../shared/socket";
+import { fetchProducts, buyProduct } from "../actions/productActions";
 import { v4 as uuidv4 } from "uuid";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
 const Main = () => {
+  const socketRef = useRef(null);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +20,31 @@ const Main = () => {
 
   useEffect(() => {
     dispatch(fetchProducts({ page, size, name: searchTerm }));
+
+    const handleSocket = async () => {
+      try {
+        const socketInstance = await createWebSocketConnection();
+        socketRef.current = socketInstance;
+
+        socketRef.current.on("reply", (msg) => {
+          dispatch({
+            type: "UPDATE_PRODUCT_STOCK",
+            payload: {
+              productId: msg.productId,
+              newStock: msg.newStock,
+            },
+          });
+        });
+
+        return () => {
+          socketRef.current.disconnect();
+        };
+      } catch (error) {
+        console.error("Error ocurred when connecting to the socket:", error);
+      }
+    };
+
+    handleSocket();
   }, [page, searchTerm]);
 
   const handleLoadMore = async () => {
@@ -34,7 +52,13 @@ const Main = () => {
   };
 
   const handleSearch = (search) => {
+    setPage(1);
     setSearchTerm(search);
+  };
+
+  const handlePurchase = (productId, quantity) => {
+    console.log(`Purchasing ${quantity} of product ${productId}`);
+    dispatch(buyProduct({ productId, quantity }));
   };
 
   const filterRenderProducts = (products, searchTerm) => {
@@ -42,11 +66,7 @@ const Main = () => {
       .filter((product) => (searchTerm ? product.product_name.includes(searchTerm) : true))
       .map((product) => (
         <Grid item xs={2} sm={4} md={4} key={uuidv4()}>
-          <Item>
-            <img src={product.product_image} alt={product.product_name} />
-            <h3>{product.product_name}</h3>
-            <p>Stock: {product.stock}</p>
-          </Item>
+          <ProductCard product={product} handlePurchase={handlePurchase} />
         </Grid>
       ));
   };

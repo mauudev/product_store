@@ -1,17 +1,20 @@
 from typing import Optional
 
+import socketio
 from fastapi import APIRouter, Depends
-from fastapi_pagination import Page, add_pagination, paginate
+from fastapi_pagination import Page, paginate
+from src.api.socketio_server import get_sio_instance
 from src.apps.products.application.use_cases import (
+    BuyProduct,
     CreateProduct,
     GetProduct,
     ListProducts,
     UpdateProduct,
     UpdateProductPartial,
 )
-from src.apps.products.domain.models import Product, ProductSchema
+from src.apps.products.domain.models import ProductSchema
 
-from .schema import CreateProductReq, ReadProductsRes, UpdateProductReq
+from .schema import CreateProductReq, UpdateProductReq
 
 router = APIRouter(prefix="/products")
 
@@ -64,3 +67,16 @@ async def partial_update(
     use_case: UpdateProductPartial = Depends(UpdateProductPartial),
 ):
     return await use_case.execute(product_id, fields)
+
+
+@router.patch("/{product_id}/buy/{quantity}", response_model=ProductSchema)
+async def buy_product(
+    product_id: int,
+    quantity: int,
+    use_case: BuyProduct = Depends(BuyProduct),
+    sio: socketio.AsyncServer = Depends(get_sio_instance),
+):
+    product = await use_case.execute(product_id, quantity)
+    await sio.emit("reply", {"productId": product.id, "newStock": product.stock})
+
+    return product

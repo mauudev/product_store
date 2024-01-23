@@ -15,6 +15,19 @@ const productsData = (state = initialState, action) => {
         size: action.payload.size,
         rawData: action.payload.rawData,
       };
+    case actionTypes.UPDATE_PRODUCT_STOCK:
+      return {
+        ...state,
+        products: state.products.map((product) => {
+          if (product.id === action.payload.productId) {
+            return {
+              ...product,
+              stock: action.payload.newStock,
+            };
+          }
+          return product;
+        }),
+      }
     default:
       return state;
   }

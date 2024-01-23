@@ -1,9 +1,11 @@
+import socketio
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from fastapi_pagination.utils import disable_installed_extensions_check
 from src.api.rest.api_v1.route_builder import build_routes
+from src.api.socketio_server import get_sio_instance
 from src.modules.shared.logger import logger
 from src.modules.shared.seed import read_and_seed_json
 from src.settings import APP_SETTINGS
@@ -16,7 +18,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app = build_routes(app)
+sio_asgi_app = socketio.ASGIApp(get_sio_instance(), app)
+
 add_pagination(app)
 disable_installed_extensions_check()
 
@@ -36,7 +41,7 @@ def start_server():
     api_host = APP_SETTINGS.API_HOST
     logger.info(f"Started server running on port: {api_port}")
     uvicorn.run(
-        "src.api.main:app",
+        "src.api.main:sio_asgi_app",
         host=api_host,
         port=int(api_port),
         log_level="info",
