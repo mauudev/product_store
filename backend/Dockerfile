@@ -15,4 +15,4 @@ RUN chmod +x ./scripts/run-backend.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/sh"]
